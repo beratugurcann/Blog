@@ -56,6 +56,16 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<BlogDbContext>();
+        // Veritabanı migration'larını otomatik uygula
+        try
+        {
+            context.Database.Migrate();
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "Migration sırasında hata oluştu");
+        }
         DbInitializer.Initialize(context);
     }
     catch (Exception ex)
