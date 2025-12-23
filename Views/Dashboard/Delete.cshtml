@@ -1,0 +1,23 @@
+@model BlogPost
+@{
+    ViewData["Title"] = "Yazı Sil";
+}
+
+<div class="delete-container">
+    <h1>Yazıyı Sil</h1>
+    
+    <div class="alert alert-warning">
+        <p>Bu yazıyı silmek istediğinizden emin misiniz?</p>
+        <p><strong>@Model.Title</strong></p>
+    </div>
+
+    <form asp-controller="Dashboard" asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">Evet, Sil</button>
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+</div>
+

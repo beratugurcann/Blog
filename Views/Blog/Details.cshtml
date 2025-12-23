@@ -1,0 +1,79 @@
+@model BlogPost
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<article class="blog-detail">
+    <div class="blog-detail-header">
+        <h1>@Model.Title</h1>
+        <div class="blog-meta">
+            <span class="blog-date">@Model.CreatedDate.ToString("dd MMMM yyyy HH:mm", new System.Globalization.CultureInfo("tr-TR"))</span>
+            @if (Model.UpdatedDate.HasValue)
+            {
+                <span class="blog-updated">Güncellenme: @Model.UpdatedDate.Value.ToString("dd MMMM yyyy HH:mm", new System.Globalization.CultureInfo("tr-TR"))</span>
+            }
+        </div>
+    </div>
+
+    <div class="blog-content">
+        @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.Content).Replace("\n", "<br />"))
+    </div>
+</article>
+
+<section class="comments-section">
+    <h2>Yorumlar (@Model.Comments.Count)</h2>
+
+    @if (Model.Comments != null && Model.Comments.Any())
+    {
+        <div class="comments-list">
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <strong>@comment.AuthorName</strong>
+                        <span class="comment-date">@comment.CreatedDate.ToString("dd MMMM yyyy HH:mm", new System.Globalization.CultureInfo("tr-TR"))</span>
+                    </div>
+                    <div class="comment-content">
+                        @Html.Raw(System.Net.WebUtility.HtmlEncode(comment.Content).Replace("\n", "<br />"))
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="no-comments">Henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+    }
+
+    <div class="comment-form-container">
+        <h3>Yorum Yap</h3>
+        <form asp-controller="Blog" asp-action="AddComment" method="post" class="comment-form">
+            <input type="hidden" asp-for="Id" name="BlogPostId" />
+            
+            <div class="form-group">
+                <label asp-for="Comments[0].AuthorName">İsim *</label>
+                <input type="text" name="AuthorName" class="form-control" required maxlength="100" />
+                <span asp-validation-for="Comments[0].AuthorName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Comments[0].Email">E-posta *</label>
+                <input type="email" name="Email" class="form-control" required maxlength="200" />
+                <span asp-validation-for="Comments[0].Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Comments[0].Content">Yorum *</label>
+                <textarea name="Content" class="form-control" rows="5" required maxlength="1000"></textarea>
+                <span asp-validation-for="Comments[0].Content" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Yorumu Gönder</button>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

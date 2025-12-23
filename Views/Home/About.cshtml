@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Hakkında";
+}
+
+<div class="about-page">
+    <div class="about-hero">
+        <h1>Blog Platformu Hakkında</h1>
+        <p class="about-subtitle">Düşüncelerinizi özgürce paylaşın</p>
+    </div>
+
+    <div class="about-content">
+        <section class="about-section">
+            <h2>Platform Hakkında</h2>
+            <p>
+                Blog Platformu, kullanıcıların düşüncelerini, deneyimlerini ve hikayelerini paylaşabilecekleri 
+                modern bir içerik yönetim sistemidir. Her kullanıcı kendi blog yazılarını oluşturabilir, 
+                düzenleyebilir ve toplulukla paylaşabilir.
+            </p>
+        </section>
+
+        <section class="about-section">
+            <h2>Özellikler</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>Kolay Kullanım</h3>
+                    <p>Basit ve anlaşılır arayüz ile blog yazılarınızı kolayca oluşturabilirsiniz.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Yorum Sistemi</h3>
+                    <p>Yazılarınıza gelen yorumları yönetebilir ve okuyucularınızla etkileşim kurabilirsiniz.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Mobil Uyumlu</h3>
+                    <p>Tüm cihazlardan sorunsuz erişim sağlayan responsive tasarım.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Güvenli Platform</h3>
+                    <p>Modern güvenlik standartları ile korunan verileriniz.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <h2>Teknik Detaylar</h2>
+            <p>
+                Bu platform <strong>ASP.NET Core MVC 8.0</strong> ve <strong>MySQL</strong> teknolojileri 
+                kullanılarak geliştirilmiştir. Modern web standartlarına uygun olarak tasarlanmıştır 
+                ve performans odaklı bir yapıya sahiptir.
+            </p>
+        </section>
+
+        <section class="about-section">
+            <h2>Başlamak İçin</h2>
+            <p>
+                Platformu kullanmaya başlamak için ücretsiz hesap oluşturabilirsiniz. 
+                Kayıt olduktan sonra ilk blog yazınızı yayınlayabilir ve toplulukla paylaşabilirsiniz.
+            </p>
+            @if (User.Identity?.IsAuthenticated != true)
+            {
+                <div class="about-actions">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Hemen Üye Ol</a>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+

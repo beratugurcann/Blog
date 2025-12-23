@@ -1,0 +1,54 @@
+@model List<BlogPost>
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Arzularınızı Kendi Tarzınızla Paylaşın</h1>
+        <p class="hero-subtitle">Düşüncelerinizi, deneyimlerinizi ve hikayelerinizi dünya ile paylaşın</p>
+        @if (User.Identity?.IsAuthenticated != true)
+        {
+            <div class="hero-actions">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-hero-primary">Hemen Başla</a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-hero-secondary">Giriş Yap</a>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="blog-header">
+    <h2>Son Yazılar</h2>
+    <p>Topluluktan en son paylaşılan içerikler</p>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="blog-list">
+        @foreach (var post in Model)
+        {
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <h2><a asp-controller="Blog" asp-action="Details" asp-route-id="@post.Id">@post.Title</a></h2>
+                    <span class="blog-date">@post.CreatedDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</span>
+                </div>
+                @if (!string.IsNullOrEmpty(post.Summary))
+                {
+                    <p class="blog-summary">@post.Summary</p>
+                }
+                else
+                {
+                    <p class="blog-summary">@(post.Content.Length > 150 ? post.Content.Substring(0, 150) + "..." : post.Content)</p>
+                }
+                <a asp-controller="Blog" asp-action="Details" asp-route-id="@post.Id" class="read-more">Devamını Oku →</a>
+            </article>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <p>Henüz blog yazısı bulunmamaktadır.</p>
+    </div>
+}
+

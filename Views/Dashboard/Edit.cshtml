@@ -1,0 +1,41 @@
+@model BlogPost
+@{
+    ViewData["Title"] = "Yazı Düzenle";
+}
+
+<div class="form-container">
+    <h1>Blog Yazısını Düzenle</h1>
+
+    <form asp-controller="Dashboard" asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CreatedDate" />
+
+        <div class="form-group">
+            <label asp-for="Title">Başlık *</label>
+            <input asp-for="Title" class="form-control" required maxlength="200" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Summary">Özet</label>
+            <textarea asp-for="Summary" class="form-control" rows="3" maxlength="500"></textarea>
+            <span asp-validation-for="Summary" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Content">İçerik *</label>
+            <textarea asp-for="Content" class="form-control" rows="15" required></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Güncelle</button>
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

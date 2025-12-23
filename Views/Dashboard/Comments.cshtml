@@ -1,0 +1,54 @@
+@model List<Comment>
+@{
+    ViewData["Title"] = "Yorum Yönetimi";
+}
+
+<div class="dashboard-header">
+    <h1>Yorum Yönetimi</h1>
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-secondary">Yazılara Dön</a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="dashboard-table-container">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Yazar</th>
+                    <th>E-posta</th>
+                    <th>Yorum</th>
+                    <th>Blog Yazısı</th>
+                    <th>Tarih</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var comment in Model)
+                {
+                    <tr>
+                        <td>@comment.Id</td>
+                        <td>@comment.AuthorName</td>
+                        <td>@comment.Email</td>
+                        <td>@(comment.Content.Length > 50 ? comment.Content.Substring(0, 50) + "..." : comment.Content)</td>
+                        <td>@(comment.BlogPost?.Title ?? "Silinmiş")</td>
+                        <td>@comment.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>
+                            <form asp-controller="Dashboard" asp-action="DeleteComment" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@comment.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bu yorumu silmek istediğinizden emin misiniz?')">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <p>Henüz yorum bulunmamaktadır.</p>
+    </div>
+}
+
