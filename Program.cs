@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Blog.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // MySQL veritabanı bağlantısını yapılandır
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string bulunamadı");
+
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+        connectionString,
         new MySqlServerVersion(new Version(8, 0, 21))
     ));
 
