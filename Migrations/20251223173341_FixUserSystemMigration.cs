@@ -12,8 +12,7 @@ namespace Blog.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Admins");
+            migrationBuilder.Sql("DROP TABLE IF EXISTS Admins;");
 
             migrationBuilder.AddColumn<int>(
                 name: "UserId",
