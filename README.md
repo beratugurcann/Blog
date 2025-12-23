@@ -60,8 +60,6 @@ dotnet run
 ## Güvenlik
 
 - `appsettings.json` dosyası `.gitignore`'a eklenmiştir
-- Veritabanı şifrelerini GitHub'a commit etmeyin
-- Detaylı bilgi için `SECURITY.md` dosyasına bakın
 
 ## Kullanım
 
@@ -106,10 +104,4 @@ Blog/
 4. Start Command: `dotnet Blog.dll`
 5. MySQL veritabanı ekleyin
 6. Connection string'i environment variable olarak ayarlayın
-
-## Notlar
-
-- Proje eğitim amaçlı geliştirilmiştir
-- Production ortamında şifre hashleme için daha güvenli algoritmalar kullanılmalıdır
-- Canlı ortamda HTTPS kullanılması önerilir
 
