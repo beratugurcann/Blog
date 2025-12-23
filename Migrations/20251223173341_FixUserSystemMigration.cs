@@ -14,12 +14,18 @@ namespace Blog.Migrations
         {
             migrationBuilder.Sql("DROP TABLE IF EXISTS Admins;");
 
-            migrationBuilder.AddColumn<int>(
-                name: "UserId",
-                table: "BlogPosts",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.Sql(@"
+                SET @table_exists = (SELECT COUNT(*) FROM information_schema.TABLES 
+                    WHERE table_schema = 'railway' AND table_name = 'BlogPosts');
+                SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS 
+                    WHERE table_schema = 'railway' AND table_name = 'BlogPosts' AND column_name = 'UserId');
+                SET @sql = IF(@table_exists > 0 AND @col_exists = 0, 
+                    'ALTER TABLE BlogPosts ADD UserId int NOT NULL DEFAULT 0', 
+                    'SELECT 1');
+                PREPARE stmt FROM @sql;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+            ");
 
             migrationBuilder.Sql(@"
                 CREATE TABLE IF NOT EXISTS Users (
@@ -35,9 +41,13 @@ namespace Blog.Migrations
             ");
 
             migrationBuilder.Sql(@"
+                SET @table_exists = (SELECT COUNT(*) FROM information_schema.TABLES 
+                    WHERE table_schema = 'railway' AND table_name = 'BlogPosts');
+                SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS 
+                    WHERE table_schema = 'railway' AND table_name = 'BlogPosts' AND column_name = 'UserId');
                 SET @index_exists = (SELECT COUNT(*) FROM information_schema.STATISTICS 
                     WHERE table_schema = 'railway' AND table_name = 'BlogPosts' AND index_name = 'IX_BlogPosts_UserId');
-                SET @sql = IF(@index_exists = 0, 
+                SET @sql = IF(@table_exists > 0 AND @col_exists > 0 AND @index_exists = 0, 
                     'CREATE INDEX IX_BlogPosts_UserId ON BlogPosts(UserId)', 
                     'SELECT 1');
                 PREPARE stmt FROM @sql;
@@ -46,9 +56,15 @@ namespace Blog.Migrations
             ");
 
             migrationBuilder.Sql(@"
+                SET @table_exists = (SELECT COUNT(*) FROM information_schema.TABLES 
+                    WHERE table_schema = 'railway' AND table_name = 'BlogPosts');
+                SET @users_exists = (SELECT COUNT(*) FROM information_schema.TABLES 
+                    WHERE table_schema = 'railway' AND table_name = 'Users');
+                SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS 
+                    WHERE table_schema = 'railway' AND table_name = 'BlogPosts' AND column_name = 'UserId');
                 SET @fk_exists = (SELECT COUNT(*) FROM information_schema.KEY_COLUMN_USAGE 
                     WHERE table_schema = 'railway' AND table_name = 'BlogPosts' AND constraint_name = 'FK_BlogPosts_Users_UserId');
-                SET @sql = IF(@fk_exists = 0, 
+                SET @sql = IF(@table_exists > 0 AND @users_exists > 0 AND @col_exists > 0 AND @fk_exists = 0, 
                     'ALTER TABLE BlogPosts ADD CONSTRAINT FK_BlogPosts_Users_UserId FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE', 
                     'SELECT 1');
                 PREPARE stmt FROM @sql;
